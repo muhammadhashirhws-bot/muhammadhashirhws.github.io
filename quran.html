@@ -7,70 +7,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@700&family=Cairo:wght@600&family=Lateef&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; }
-
-        /* --- THEMES --- */
         body.theme-1 { --bg: #0f1a16; --c-primary: #1b4d3e; --paper: #fcfaf2; --ink: #1a1a1a; }
         body.theme-2 { --bg: #050a15; --c-primary: #15315e; --paper: #e3d3b6; --ink: #3e2723; }
         body.theme-3 { --bg: #000000; --c-primary: #1a1a1a; --paper: #111111; --ink: #ffffff; }
 
-        /* --- FONTS --- */
-        body.font-1 .quran-text { font-family: 'Amiri', serif; font-size: 1.6rem; } /* Traditional */
-        body.font-2 .quran-text { font-family: 'Cairo', sans-serif; font-size: 1.3rem; } /* Modern */
-        body.font-3 .quran-text { font-family: 'Lateef', cursive; font-size: 2.2rem; } /* Calligraphic */
+        body.font-1 .quran-text { font-family: 'Amiri', serif; font-size: 1.6rem; }
+        body.font-2 .quran-text { font-family: 'Cairo', sans-serif; font-size: 1.3rem; }
+        body.font-3 .quran-text { font-family: 'Lateef', cursive; font-size: 2.2rem; }
 
-        body { 
-            margin: 0; background-color: var(--bg); color: var(--gold); 
-            transition: all 0.4s ease; overflow-x: hidden;
-        }
-
-        .wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; padding: 20px 10px 120px; box-sizing: border-box; }
+        body { margin: 0; background-color: var(--bg); color: var(--gold); transition: all 0.4s ease; overflow-x: hidden; }
+        .wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; padding: 20px 10px 150px; box-sizing: border-box; }
 
         .mushaf-cover {
             width: 100%; max-width: 380px; aspect-ratio: 2/3;
             background: radial-gradient(circle, var(--c-primary) 0%, #000 100%);
             border: 4px solid var(--gold); border-radius: 12px;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); margin-bottom: 30px;
+            display: flex; justify-content: center; align-items: center; margin-bottom: 30px;
         }
         
-        .frame { 
-            width: 88%; height: 92%; border: 2px solid var(--gold); 
-            outline: 8px double var(--gold); outline-offset: -18px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
+        .frame { width: 88%; height: 92%; border: 2px solid var(--gold); outline: 8px double var(--gold); outline-offset: -18px; display: flex; justify-content: center; align-items: center; }
 
-        .quran-page {
-            width: 100%; max-width: 500px; background: var(--paper);
-            color: var(--ink); border-radius: 4px; padding: clamp(10px, 4%, 25px);
-            box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
+        .quran-page { width: 100%; max-width: 500px; background: var(--paper); color: var(--ink); border-radius: 4px; padding: 15px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .inner-page { border: 4px double var(--gold); padding: 20px; min-height: 500px; display: flex; flex-direction: column; }
-        
-        .surah-header { 
-            border: 2px solid var(--gold); font-family: 'Aref Ruqaa'; 
-            font-size: 1.8rem; text-align: center; margin-bottom: 20px; padding: 5px; color: var(--gold);
-        }
-
+        .surah-header { border: 2px solid var(--gold); font-family: 'Aref Ruqaa'; font-size: 1.8rem; text-align: center; margin-bottom: 20px; padding: 5px; color: var(--gold); }
         .quran-text { line-height: 2.4; text-align: justify; direction: rtl; flex-grow: 1; }
-        .ayah-num { color: var(--gold); font-family: 'Cairo'; font-weight: bold; font-size: 0.8rem; margin: 0 4px; }
+        
+        /* Highlight for Jumped Verse */
+        .highlight { background-color: rgba(212, 175, 55, 0.3); border-radius: 4px; transition: background 2s; }
+        .ayah-num { color: var(--gold); font-weight: bold; cursor: pointer; }
 
-        /* --- INDEX OVERLAY --- */
-        #index-ui {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.96); z-index: 2000;
-            display: none; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box;
-        }
-        .surah-list { width: 100%; max-width: 500px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-        .surah-card { border: 1px solid var(--gold); padding: 12px; text-align: center; cursor: pointer; border-radius: 4px; }
+        #index-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 2000; display: none; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
+        .surah-list { width: 100%; max-width: 500px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-        /* --- HUD --- */
-        .hud { position: fixed; bottom: 15px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; padding: 0 10px; z-index: 1000; }
-        .btn { 
-            background: #000; color: var(--gold); border: 1px solid var(--gold); 
-            padding: 10px; border-radius: 5px; flex: 1; max-width: 85px;
-            font-family: 'Cairo'; font-size: 0.75rem; cursor: pointer;
-        }
+        .hud { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.9); border-top: 1px solid var(--gold); display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 10px; z-index: 1000; }
+        .btn { background: #000; color: var(--gold); border: 1px solid var(--gold); padding: 8px; border-radius: 5px; font-family: 'Cairo'; font-size: 0.75rem; cursor: pointer; min-width: 60px; }
+        .jump-box { background: #111; color: var(--gold); border: 1px solid var(--gold); width: 60px; text-align: center; border-radius: 5px; font-weight: bold; }
     </style>
 </head>
 <body class="theme-1 font-1">
@@ -78,7 +49,7 @@
 <div id="index-ui">
     <h2 style="font-family:'Aref Ruqaa'">فهرس السور</h2>
     <div class="surah-list" id="surahContainer"></div>
-    <button class="btn" onclick="toggleIndex()" style="margin-top:20px; max-width: 200px;">إغلاق (N)</button>
+    <button class="btn" onclick="toggleIndex()" style="margin-top:20px; width: 150px;">إغلاق (N)</button>
 </div>
 
 <div class="wrapper">
@@ -92,66 +63,57 @@
     <button class="btn" onclick="nextTheme()">المظهر (C)</button>
     <button class="btn" onclick="nextFont()">الخط (F)</button>
     <button class="btn" onclick="toggleIndex()">الفهرس (N)</button>
-    <button class="btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">الغلاف</button>
+    <div style="display:flex; align-items:center; gap:5px; border-left:1px solid #444; padding-left:10px;">
+        <span style="font-size:0.7rem;">الآية:</span>
+        <input type="number" id="ayahInput" class="jump-box" placeholder="1" min="1">
+        <button class="btn" onclick="jumpToAyah()" style="min-width:40px;">انتقال (J)</button>
+    </div>
 </div>
 
 <script>
-    let themeIdx = 1;
-    let fontIdx = 1;
+    let themeIdx = 1, fontIdx = 1;
+    const surahNames = ["الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه", "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم", "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر", "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة", "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج", "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس", "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات", "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر", "المسد", "الإخلاص", "الفلق", "الناس"];
 
-    // --- KEYBOARD LISTENERS ---
     window.addEventListener('keydown', (e) => {
         const key = e.key.toLowerCase();
         if (key === 'c') nextTheme();
         if (key === 'n') toggleIndex();
         if (key === 'f') nextFont();
+        if (key === 'j') document.getElementById('ayahInput').focus();
     });
 
-    function nextTheme() {
-        document.body.classList.remove(`theme-${themeIdx}`);
-        themeIdx = (themeIdx % 3) + 1;
-        document.body.classList.add(`theme-${themeIdx}`);
-    }
-
-    function nextFont() {
-        document.body.classList.remove(`font-${fontIdx}`);
-        fontIdx = (fontIdx % 3) + 1;
-        document.body.classList.add(`font-${fontIdx}`);
-    }
-
-    function toggleIndex() {
-        const ui = document.getElementById('index-ui');
-        ui.style.display = (ui.style.display === 'flex') ? 'none' : 'flex';
-    }
+    function nextTheme() { document.body.classList.remove(`theme-${themeIdx}`); themeIdx = (themeIdx % 3) + 1; document.body.classList.add(`theme-${themeIdx}`); }
+    function nextFont() { document.body.classList.remove(`font-${fontIdx}`); fontIdx = (fontIdx % 3) + 1; document.body.classList.add(`font-${fontIdx}`); }
+    function toggleIndex() { const ui = document.getElementById('index-ui'); ui.style.display = (ui.style.display === 'flex') ? 'none' : 'flex'; }
 
     async function loadSurah(id) {
         const reader = document.getElementById('reader');
         reader.innerHTML = "<p style='text-align:center'>جاري التحميل...</p>";
         if(document.getElementById('index-ui').style.display === 'flex') toggleIndex();
-        
         try {
             const res = await fetch(`https://api.alquran.cloud/v1/surah/${id}`);
             const data = await res.json();
-            const text = data.data.ayahs.map(a => `${a.text} <span class="ayah-num">﴿${a.numberInSurah}﴾</span>`).join(' ');
-            
-            reader.innerHTML = `
-                <div class="quran-page">
-                    <div class="inner-page">
-                        <div class="surah-header">سورة ${data.data.name}</div>
-                        <div class="quran-text">${text}</div>
-                    </div>
-                </div>
-            `;
-            reader.scrollIntoView({behavior:'smooth'});
+            const text = data.data.ayahs.map(a => `<span id="a-${a.numberInSurah}">${a.text} <span class="ayah-num">﴿${a.numberInSurah}﴾</span></span>`).join(' ');
+            reader.innerHTML = `<div class="quran-page"><div class="inner-page"><div class="surah-header">سورة ${data.data.name}</div><div class="quran-text" id="surahText">${text}</div></div></div>`;
+            window.scrollTo({top: 400, behavior: 'smooth'});
         } catch (e) { reader.innerHTML = "Error."; }
     }
 
-    // Initialize Index
-    const surahNames = ["الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه", "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم", "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر", "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة", "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج", "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس", "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات", "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر", "المسد", "الإخلاص", "الفلق", "الناس"];
+    function jumpToAyah() {
+        const num = document.getElementById('ayahInput').value;
+        const target = document.getElementById(`a-${num}`);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            target.classList.add('highlight');
+            setTimeout(() => target.classList.remove('highlight'), 3000);
+        } else { alert("رقم الآية غير موجود في هذه السورة"); }
+    }
+
     const container = document.getElementById('surahContainer');
     surahNames.forEach((name, i) => {
         const div = document.createElement('div');
-        div.className = 'surah-card';
+        div.className = 'btn'; 
+        div.style.textAlign = 'center';
         div.innerText = `${i+1}. ${name}`;
         div.onclick = () => loadSurah(i+1);
         container.appendChild(div);
