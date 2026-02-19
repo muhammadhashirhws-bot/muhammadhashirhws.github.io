@@ -6,7 +6,7 @@
     <title>Al Quran Majeed</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@700&family=Cairo:wght@600&family=Lateef&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --gold-l: #fcf1a2; }
+        :root { --gold: #d4af37; }
         
         body.theme-1 { --bg: #0f1a16; --c-cover: #1b4d3e; --paper: #fcfaf2; --ink: #1a1a1a; }
         body.theme-2 { --bg: #050a15; --c-cover: #15315e; --paper: #e3d3b6; --ink: #3e2723; }
@@ -16,49 +16,42 @@
         body.font-2 .quran-text { font-family: 'Cairo', sans-serif; font-size: 1.4rem; }
         body.font-3 .quran-text { font-family: 'Lateef', cursive; font-size: 2.3rem; }
 
-        body { margin: 0; background-color: var(--bg); transition: all 0.4s ease; overflow-x: hidden; }
+        body { margin: 0; background-color: var(--bg); transition: background 0.4s ease; overflow-x: hidden; }
         .wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; padding: 20px 10px 180px; box-sizing: border-box; }
 
         .mushaf-cover {
             width: 100%; max-width: 350px; aspect-ratio: 2/3;
             background: radial-gradient(circle, var(--c-cover) 0%, #000 100%);
             border: 4px solid var(--gold); border-radius: 12px;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); margin-bottom: 30px;
+            display: flex; justify-content: center; align-items: center; margin-bottom: 30px;
         }
         .frame { width: 88%; height: 92%; border: 2px solid var(--gold); outline: 8px double var(--gold); outline-offset: -18px; display: flex; justify-content: center; align-items: center; }
         .title { font-family: 'Aref Ruqaa'; font-size: 3rem; color: var(--gold); text-align: center; }
 
-        .quran-page {
-            width: 100%; max-width: 500px; background: var(--paper);
-            color: var(--ink); border-radius: 4px; padding: 15px;
-            box-sizing: border-box; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-        }
+        .quran-page { width: 100%; max-width: 500px; background: var(--paper); color: var(--ink); border-radius: 4px; padding: 15px; box-sizing: border-box; }
         .inner-border { border: 4px double var(--gold); padding: 20px; min-height: 500px; display: flex; flex-direction: column; }
         .surah-name { border: 2px solid var(--gold); color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 2rem; text-align: center; margin-bottom: 20px; padding: 5px; }
         .quran-text { line-height: 2.5; text-align: justify; direction: rtl; }
         
         .ayah-span { transition: background 1s; padding: 0 2px; }
-        .ayah-num { color: var(--gold); font-weight: bold; font-family: 'Cairo'; font-size: 0.9rem; }
-        .highlight { background: rgba(212, 175, 55, 0.5); border-radius: 5px; }
+        .highlight { background: rgba(212, 175, 55, 0.6) !important; border-radius: 5px; color: #000 !important; }
 
-        #nav-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.97); z-index: 9999; display: none; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
-        .search { width: 100%; max-width: 400px; padding: 12px; background: #111; border: 1px solid var(--gold); color: #fff; border-radius: 8px; text-align: center; margin-bottom: 15px; font-family: 'Cairo'; }
+        #nav-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 9999; display: none; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
+        .search { width: 100%; max-width: 400px; padding: 12px; background: #111; border: 1px solid var(--gold); color: #fff; border-radius: 8px; text-align: center; margin-bottom: 15px; }
         .grid { width: 100%; max-width: 500px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         
-        /* --- ENGLISH CONTROLS --- */
-        .hud { position: fixed; bottom: 0; left: 0; right: 0; background: #000; border-top: 2px solid var(--gold); display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 12px; z-index: 5000; direction: ltr; }
-        .btn { background: #111; color: var(--gold); border: 1px solid var(--gold); padding: 10px; border-radius: 5px; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 0.8rem; min-width: 80px; text-transform: uppercase; letter-spacing: 1px; }
-        .input-jump { width: 70px; background: #111; border: 1px solid var(--gold); color: var(--gold); text-align: center; border-radius: 5px; font-weight: bold; padding: 5px; }
-        .hud-label { color: #fff; font-family: 'Cairo'; font-size: 0.7rem; align-self: center; margin-right: 5px; opacity: 0.8; }
+        /* HUD IN ENGLISH */
+        .hud { position: fixed; bottom: 0; left: 0; right: 0; background: #000; border-top: 2px solid var(--gold); display: flex; justify-content: center; gap: 10px; padding: 15px; z-index: 5000; direction: ltr; }
+        .btn { background: #111; color: var(--gold); border: 1px solid var(--gold); padding: 10px; border-radius: 5px; cursor: pointer; font-family: sans-serif; font-weight: bold; font-size: 0.75rem; }
+        .input-jump { width: 60px; background: #222; border: 1px solid var(--gold); color: var(--gold); text-align: center; border-radius: 5px; font-weight: bold; }
     </style>
 </head>
 <body class="theme-1 font-1">
 
 <div id="nav-ui">
-    <input type="text" class="search" id="sInput" placeholder="Search Surah Name or Number..." oninput="drawIndex()">
+    <input type="text" class="search" id="sInput" placeholder="Search Surah...">
     <div class="grid" id="sGrid"></div>
-    <button class="btn" onclick="toggleNav()" style="margin-top: 15px; width: 200px;">Close Index (N)</button>
+    <button class="btn" style="margin-top:20px; width:200px;" onclick="toggleNav()">CLOSE INDEX (N)</button>
 </div>
 
 <div class="wrapper">
@@ -69,12 +62,12 @@
 </div>
 
 <div class="hud">
-    <button class="btn" onclick="nextT()">Theme (C)</button>
-    <button class="btn" onclick="nextF()">Font (F)</button>
-    <button class="btn" onclick="toggleNav()">Index (N)</button>
-    <div style="display:flex; align-items:center; gap:8px; margin-left:10px; border-left:1px solid #333; padding-left:15px;">
-        <span class="hud-label">AYAH:</span>
-        <input type="number" id="aInput" class="input-jump" placeholder="Enter" onkeydown="if(event.key==='Enter') goAyah()">
+    <button class="btn" onclick="nextT()">THEME (C)</button>
+    <button class="btn" onclick="nextF()">FONT (F)</button>
+    <button class="btn" onclick="toggleNav()">INDEX (N)</button>
+    <div style="display:flex; align-items:center; gap:5px; margin-left:10px; border-left: 1px solid #444; padding-left:10px;">
+        <span style="color:#fff; font-size:0.7rem;">AYAH:</span>
+        <input type="number" id="aInput" class="input-jump" placeholder="...">
     </div>
 </div>
 
@@ -82,46 +75,65 @@
     let tIdx = 1, fIdx = 1;
     const names = ["الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه", "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم", "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر", "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة", "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج", "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس", "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات", "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر", "المسد", "الإخلاص", "الفلق", "الناس"];
 
-    window.onkeydown = (e) => {
+    // 1. IMPROVED SHORTCUTS
+    document.addEventListener('keydown', (e) => {
         const k = e.key.toLowerCase();
+        if (e.target.tagName === 'INPUT') {
+            if (k === 'enter' && e.target.id === 'aInput') teleport();
+            return; 
+        }
         if (k === 'c') nextT();
         if (k === 'f') nextF();
         if (k === 'n') toggleNav();
-    };
+    });
 
-    function nextT() { document.body.className = document.body.className.replace(/theme-\d/, `theme-${tIdx = (tIdx % 3) + 1}`); }
-    function nextF() { document.body.className = document.body.className.replace(/font-\d/, `font-${fIdx = (fIdx % 3) + 1}`); }
-    function toggleNav() { const el = document.getElementById('nav-ui'); el.style.display = (el.style.display === 'flex') ? 'none' : 'flex'; }
+    function nextT() { 
+        document.body.classList.remove(`theme-${tIdx}`);
+        tIdx = (tIdx % 3) + 1;
+        document.body.classList.add(`theme-${tIdx}`);
+    }
+
+    function nextF() { 
+        document.body.classList.remove(`font-${fIdx}`);
+        fIdx = (fIdx % 3) + 1;
+        document.body.classList.add(`font-${fIdx}`);
+    }
+
+    function toggleNav() {
+        const el = document.getElementById('nav-ui');
+        el.style.display = (el.style.display === 'flex') ? 'none' : 'flex';
+        if(el.style.display === 'flex') document.getElementById('sInput').focus();
+    }
 
     async function load(id) {
-        const box = document.getElementById('main-reader');
-        box.innerHTML = "<p style='color:var(--gold); text-align:center;'>Loading Surah...</p>";
-        if(document.getElementById('nav-ui').style.display === 'flex') toggleNav();
-        
+        const reader = document.getElementById('main-reader');
+        reader.innerHTML = "<p style='color:var(--gold); text-align:center;'>Loading...</p>";
+        toggleNav();
         try {
             const r = await fetch(`https://api.alquran.cloud/v1/surah/${id}`);
             const d = await r.json();
-            const text = d.data.ayahs.map(a => `<span class="ayah-span" id="v-${a.numberInSurah}">${a.text} <span class="ayah-num">﴿${a.numberInSurah}﴾</span></span>`).join(' ');
-            box.innerHTML = `<div class="quran-page"><div class="inner-border"><div class="surah-name">سورة ${d.data.name}</div><div class="quran-text">${text}</div></div></div>`;
-            window.scrollTo({top: document.getElementById('topCover').offsetHeight, behavior: 'smooth'});
-        } catch (err) { box.innerHTML = "<p style='color:red; text-align:center;'>Connection Error. Please check your internet.</p>"; }
+            const text = d.data.ayahs.map(a => `<span class="ayah-span" id="v-${a.numberInSurah}">${a.text} <b style="color:var(--gold)">﴿${a.numberInSurah}﴾</b></span>`).join(' ');
+            reader.innerHTML = `<div class="quran-page"><div class="inner-border"><div class="surah-name">${d.data.name}</div><div class="quran-text">${text}</div></div></div>`;
+            window.scrollTo({top: 400, behavior: 'smooth'});
+        } catch(e) { reader.innerHTML = "Network Error."; }
     }
 
-    function goAyah() {
+    // 2. TELEPORT LOGIC
+    function teleport() {
         const val = document.getElementById('aInput').value;
         const target = document.getElementById(`v-${val}`);
         if(target) {
             target.scrollIntoView({ behavior: 'smooth', block: 'center' });
             target.classList.add('highlight');
             setTimeout(() => target.classList.remove('highlight'), 3000);
-            // Clear input after teleport
-            document.getElementById('aInput').value = "";
             document.getElementById('aInput').blur();
         } else {
-            alert("Ayat not found in this Surah.");
+            alert("Ayah not found.");
         }
     }
 
+    // 3. SEARCH LOGIC
+    document.getElementById('sInput').oninput = drawIndex;
     function drawIndex() {
         const term = document.getElementById('sInput').value;
         const grid = document.getElementById('sGrid');
@@ -129,8 +141,7 @@
         names.forEach((n, i) => {
             if(n.includes(term) || (i+1).toString().includes(term)) {
                 const d = document.createElement('div');
-                d.className = 'btn'; d.style.textAlign = 'center';
-                d.innerText = `${i+1}. ${n}`;
+                d.className = 'btn'; d.innerText = `${i+1}. ${n}`;
                 d.onclick = () => load(i+1);
                 grid.appendChild(d);
             }
