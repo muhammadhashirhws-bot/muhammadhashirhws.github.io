@@ -4,7 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Al-Quran — The Noble Reading</title>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Cinzel:wght@400;600&family=Scheherazade+New:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Cinzel:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* KFGQPC Indopak Nastaleeq — hosted on jsDelivr */
+@font-face {
+  font-family: 'IndoPak';
+  src: url('https://cdn.jsdelivr.net/gh/kn-m/indopak-quran-font@main/fonts/IndoPak.woff2') format('woff2'),
+       url('https://fonts.gstatic.com/ea/notonastaliqurdudraft/v6/NotoNastaliqUrdu.woff2') format('woff2');
+  font-display: swap;
+}
+/* Tajweed font — color-coded rules via KFGQPC Hafs Tajweed */
+@font-face {
+  font-family: 'Tajweed';
+  src: url('https://cdn.jsdelivr.net/gh/mustafa0x/qpc-fonts@master/QCF_BSML.TTF') format('truetype');
+  font-display: swap;
+}
+</style>
 <style>
 /* ══════════════════════════════════════════════════
    THEME VARIABLES
@@ -262,13 +277,24 @@ nav a:hover{color:var(--accent-light)}
 .slider-val{font-family:var(--ui-font);font-size:.7rem;color:var(--accent-light);min-width:32px;text-align:right}
 
 /* Font selector */
-.font-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.font-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .font-opt{border:1px solid var(--border-accent);border-radius:4px;padding:10px 12px;
   cursor:pointer;transition:all .2s;background:var(--bg3)}
 .font-opt.active{border-color:var(--accent);background:var(--accent-dim)}
 .font-opt:hover{border-color:var(--accent-light)}
 .font-arabic{font-size:1.3rem;direction:rtl;color:var(--accent-light);margin-bottom:3px}
 .font-name{font-family:var(--ui-font);font-size:.6rem;letter-spacing:.08em;color:var(--text-muted)}
+
+/* Tajweed colour rules — these are applied when tajweed font is active */
+.tajweed-active .ayah-arabic { font-family:'Tajweed', 'Amiri', serif !important; }
+/* Standard Tajweed colour coding */
+.tajweed-active .ghunnah    { color:#00A550 }
+.tajweed-active .ikhfa      { color:#4B9CD3 }
+.tajweed-active .idgham     { color:#FF6B35 }
+.tajweed-active .qalqalah   { color:#8E44AD }
+.tajweed-active .madd       { color:#C0392B }
+.tajweed-active .shaddah    { color:#27AE60 }
+.tajweed-active .sukoon     { color:#2C3E50 }
 
 /* Layout selector */
 .layout-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -454,6 +480,10 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
 
         <!-- BLUES -->
         <div class="theme-group-label">Blues</div>
+        <div class="theme-swatch" data-theme="navy" onclick="setTheme('navy',this)">
+          <div class="swatch-dot" style="background:linear-gradient(135deg,#0C1A3A,#1A3060)"></div>
+          <div class="swatch-name">Navy</div>
+        </div>
         <div class="theme-swatch" data-theme="sapphire" onclick="setTheme('sapphire',this)">
           <div class="swatch-dot" style="background:linear-gradient(135deg,#3D6A9C,#7BA7D4)"></div>
           <div class="swatch-name">Sapphire</div>
@@ -478,7 +508,7 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
           <div class="swatch-name">Pistachio</div>
         </div>
 
-        <!-- YELLOWS / GOLDS -->
+        <!-- GOLDS -->
         <div class="theme-group-label">Golds</div>
         <div class="theme-swatch active" data-theme="gold" onclick="setTheme('gold',this)">
           <div class="swatch-dot" style="background:linear-gradient(135deg,#C9A84C,#E8C97A)"></div>
@@ -487,13 +517,6 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
         <div class="theme-swatch" data-theme="cream" onclick="setTheme('cream',this)">
           <div class="swatch-dot" style="background:linear-gradient(135deg,#C49A2A,#FDFAF0)"></div>
           <div class="swatch-name">Cream</div>
-        </div>
-
-        <!-- NEUTRALS -->
-        <div class="theme-group-label">Neutrals</div>
-        <div class="theme-swatch" data-theme="navy" onclick="setTheme('navy',this)">
-          <div class="swatch-dot" style="background:linear-gradient(135deg,#0C1A3A,#1A3060)"></div>
-          <div class="swatch-name">Navy</div>
         </div>
         <div class="theme-swatch" data-theme="parchment" onclick="setTheme('parchment',this)">
           <div class="swatch-dot" style="background:linear-gradient(135deg,#C4A35A,#F5EDD8)"></div>
@@ -535,13 +558,26 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
       <div class="s-label">Arabic Font Style</div>
       <div class="font-grid">
         <div class="font-opt active" data-font="Amiri" onclick="setArabicFont('Amiri',this)">
-          <div class="font-arabic" style="font-family:'Amiri',serif">بسم الله</div>
+          <div class="font-arabic" style="font-family:'Amiri',serif">بِسْمِ اللَّه</div>
           <div class="font-name">Amiri</div>
         </div>
-        <div class="font-opt" data-font="Scheherazade New" onclick="setArabicFont('Scheherazade New',this)">
-          <div class="font-arabic" style="font-family:'Scheherazade New',serif">بسم الله</div>
-          <div class="font-name">Scheherazade</div>
+        <div class="font-opt" data-font="IndoPak" onclick="setArabicFont('IndoPak',this)">
+          <div class="font-arabic" style="font-family:'IndoPak','Amiri',serif">بِسْمِ اللَّه</div>
+          <div class="font-name">IndoPak</div>
         </div>
+        <div class="font-opt" data-font="Tajweed" onclick="setArabicFont('Tajweed',this)">
+          <div class="font-arabic" style="font-family:'Tajweed','Amiri',serif;color:var(--accent-light)">بِسْمِ اللَّه</div>
+          <div class="font-name">Tajweed ✦</div>
+        </div>
+      </div>
+      <div id="tajweed-legend" style="display:none;margin-top:10px;background:var(--bg3);border:1px solid var(--border-accent);border-radius:4px;padding:10px 12px;font-size:.72rem;line-height:1.9">
+        <div style="font-family:var(--ui-font);font-size:.6rem;letter-spacing:.1em;color:var(--accent);margin-bottom:6px">TAJWEED COLOUR GUIDE</div>
+        <span style="color:#00A550">■</span> Ghunnah &nbsp;
+        <span style="color:#4B9CD3">■</span> Ikhfa &nbsp;
+        <span style="color:#FF6B35">■</span> Idgham<br>
+        <span style="color:#8E44AD">■</span> Qalqalah &nbsp;
+        <span style="color:#C0392B">■</span> Madd &nbsp;
+        <span style="color:#27AE60">■</span> Shaddah
       </div>
     </div>
 
@@ -895,8 +931,11 @@ function setArabicFont(font,el){
   currentArabicFont=font;
   document.querySelectorAll('.font-opt').forEach(e=>e.classList.remove('active'));
   if(el) el.classList.add('active');
-  // Apply CSS variable
-  document.documentElement.style.setProperty('--arabic-font',`'${font}', serif`);
+  document.documentElement.style.setProperty('--arabic-font',`'${font}', 'Amiri', serif`);
+  // Tajweed mode — show legend, add class for colour rules
+  const isTajweed = font === 'Tajweed';
+  document.getElementById('tajweed-legend').style.display = isTajweed ? 'block' : 'none';
+  document.getElementById('reading-content').classList.toggle('tajweed-active', isTajweed);
 }
 
 /* ── LAYOUT ── */
