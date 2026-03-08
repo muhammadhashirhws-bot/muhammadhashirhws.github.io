@@ -116,6 +116,23 @@ body.theme-pistachio {
   --header-bg:     rgba(240,247,238,.95);
   --sidebar-bg:    #E0F0DC;
 }
+/* THEME: Jade (Deep Green Dark) */
+body.theme-jade {
+  --accent:        #3EB489;
+  --accent-light:  #62CDA8;
+  --accent-dim:    rgba(62,180,137,.15);
+  --accent-glow:   rgba(62,180,137,.08);
+  --bg:            #050E0A;
+  --bg2:           #0A1A12;
+  --bg3:           #0F261A;
+  --bg4:           #153222;
+  --text:          #C8EDE0;
+  --text-muted:    #6AAE92;
+  --border:        rgba(200,237,224,.07);
+  --border-accent: rgba(62,180,137,.28);
+  --header-bg:     rgba(5,14,10,.93);
+  --sidebar-bg:    #080F0C;
+}
 /* THEME: Parchment (Light) */
 body.theme-parchment {
   --accent:        #8B6914;
@@ -209,7 +226,8 @@ nav a:hover{color:var(--accent-light)}
 .s-label::after{content:'';flex:1;height:1px;background:var(--border-accent)}
 
 /* Color themes */
-.theme-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.theme-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.theme-group-label{grid-column:1/-1;font-family:var(--ui-font);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);opacity:.7;margin-top:6px;margin-bottom:2px;padding-bottom:4px;border-bottom:1px solid var(--border-accent)}
 .theme-swatch{border:2px solid var(--border);border-radius:6px;padding:10px 8px;
   cursor:pointer;text-align:center;transition:all .25s;background:var(--bg3)}
 .theme-swatch.active{border-color:var(--accent);background:var(--accent-dim)}
@@ -433,14 +451,9 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
     <div class="s-section">
       <div class="s-label">Color Theme</div>
       <div class="theme-grid">
-        <div class="theme-swatch active" data-theme="gold" onclick="setTheme('gold',this)">
-          <div class="swatch-dot" style="background:linear-gradient(135deg,#C9A84C,#E8C97A)"></div>
-          <div class="swatch-name">Dark Gold</div>
-        </div>
-        <div class="theme-swatch" data-theme="emerald" onclick="setTheme('emerald',this)">
-          <div class="swatch-dot" style="background:linear-gradient(135deg,#2D6A4F,#52B788)"></div>
-          <div class="swatch-name">Emerald</div>
-        </div>
+
+        <!-- BLUES -->
+        <div class="theme-group-label">Blues</div>
         <div class="theme-swatch" data-theme="sapphire" onclick="setTheme('sapphire',this)">
           <div class="swatch-dot" style="background:linear-gradient(135deg,#3D6A9C,#7BA7D4)"></div>
           <div class="swatch-name">Sapphire</div>
@@ -449,22 +462,44 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
           <div class="swatch-dot" style="background:linear-gradient(135deg,#5BB8E8,#C2DFF2)"></div>
           <div class="swatch-name">Ice</div>
         </div>
-        <div class="theme-swatch" data-theme="cream" onclick="setTheme('cream',this)">
-          <div class="swatch-dot" style="background:linear-gradient(135deg,#C49A2A,#FDFAF0)"></div>
-          <div class="swatch-name">Cream</div>
+
+        <!-- GREENS -->
+        <div class="theme-group-label">Greens</div>
+        <div class="theme-swatch" data-theme="jade" onclick="setTheme('jade',this)">
+          <div class="swatch-dot" style="background:linear-gradient(135deg,#0A1A12,#3EB489)"></div>
+          <div class="swatch-name">Jade</div>
+        </div>
+        <div class="theme-swatch" data-theme="emerald" onclick="setTheme('emerald',this)">
+          <div class="swatch-dot" style="background:linear-gradient(135deg,#2D6A4F,#52B788)"></div>
+          <div class="swatch-name">Emerald</div>
         </div>
         <div class="theme-swatch" data-theme="pistachio" onclick="setTheme('pistachio',this)">
           <div class="swatch-dot" style="background:linear-gradient(135deg,#6AAF5E,#CCE6C6)"></div>
           <div class="swatch-name">Pistachio</div>
         </div>
-        <div class="theme-swatch" data-theme="parchment" onclick="setTheme('parchment',this)">
-          <div class="swatch-dot" style="background:linear-gradient(135deg,#C4A35A,#F5EDD8)"></div>
-          <div class="swatch-name">Parchment</div>
+
+        <!-- YELLOWS / GOLDS -->
+        <div class="theme-group-label">Golds</div>
+        <div class="theme-swatch active" data-theme="gold" onclick="setTheme('gold',this)">
+          <div class="swatch-dot" style="background:linear-gradient(135deg,#C9A84C,#E8C97A)"></div>
+          <div class="swatch-name">Dark Gold</div>
         </div>
+        <div class="theme-swatch" data-theme="cream" onclick="setTheme('cream',this)">
+          <div class="swatch-dot" style="background:linear-gradient(135deg,#C49A2A,#FDFAF0)"></div>
+          <div class="swatch-name">Cream</div>
+        </div>
+
+        <!-- NEUTRALS -->
+        <div class="theme-group-label">Neutrals</div>
         <div class="theme-swatch" data-theme="navy" onclick="setTheme('navy',this)">
           <div class="swatch-dot" style="background:linear-gradient(135deg,#0C1A3A,#1A3060)"></div>
           <div class="swatch-name">Navy</div>
         </div>
+        <div class="theme-swatch" data-theme="parchment" onclick="setTheme('parchment',this)">
+          <div class="swatch-dot" style="background:linear-gradient(135deg,#C4A35A,#F5EDD8)"></div>
+          <div class="swatch-name">Parchment</div>
+        </div>
+
       </div>
     </div>
 
