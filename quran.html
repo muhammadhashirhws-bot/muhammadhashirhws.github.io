@@ -4,18 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Al-Quran — The Noble Reading</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Cinzel:wght@400;600&family=Scheherazade+New:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Cinzel:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
+/* KFGQPC Indopak Nastaleeq — hosted on jsDelivr */
 @font-face {
   font-family: 'IndoPak';
-  src: url('assets/indopak.woff2') format('woff2');
+  src: url('https://cdn.jsdelivr.net/gh/kn-m/indopak-quran-font@main/fonts/IndoPak.woff2') format('woff2'),
+       url('https://fonts.gstatic.com/ea/notonastaliqurdudraft/v6/NotoNastaliqUrdu.woff2') format('woff2');
   font-display: swap;
 }
+/* Tajweed font — color-coded rules via KFGQPC Hafs Tajweed */
 @font-face {
-  font-family: 'SuraNames';
-  src: url('assets/sura_names.ttf') format('truetype');
+  font-family: 'Tajweed';
+  src: url('https://cdn.jsdelivr.net/gh/mustafa0x/qpc-fonts@master/QCF_BSML.TTF') format('truetype');
   font-display: swap;
 }
+</style>
+<style>
 /* ══════════════════════════════════════════════════
    THEME VARIABLES
 ══════════════════════════════════════════════════ */
@@ -37,8 +42,7 @@
   --sidebar-bg:    #13131A;
   --radius:        3px;
   --body-font:     'Cormorant Garamond', serif;
-  --arabic-font:   'IndoPak', serif;
-  --surah-name-font: 'SuraNames', serif;
+  --arabic-font:   'Amiri', serif;
   --ui-font:       'Cinzel', serif;
 }
 
@@ -273,13 +277,24 @@ nav a:hover{color:var(--accent-light)}
 .slider-val{font-family:var(--ui-font);font-size:.7rem;color:var(--accent-light);min-width:32px;text-align:right}
 
 /* Font selector */
-.font-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.font-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .font-opt{border:1px solid var(--border-accent);border-radius:4px;padding:10px 12px;
   cursor:pointer;transition:all .2s;background:var(--bg3)}
 .font-opt.active{border-color:var(--accent);background:var(--accent-dim)}
 .font-opt:hover{border-color:var(--accent-light)}
 .font-arabic{font-size:1.3rem;direction:rtl;color:var(--accent-light);margin-bottom:3px}
 .font-name{font-family:var(--ui-font);font-size:.6rem;letter-spacing:.08em;color:var(--text-muted)}
+
+/* Tajweed colour rules — these are applied when tajweed font is active */
+.tajweed-active .ayah-arabic { font-family:'Tajweed', 'Amiri', serif !important; }
+/* Standard Tajweed colour coding */
+.tajweed-active .ghunnah    { color:#00A550 }
+.tajweed-active .ikhfa      { color:#4B9CD3 }
+.tajweed-active .idgham     { color:#FF6B35 }
+.tajweed-active .qalqalah   { color:#8E44AD }
+.tajweed-active .madd       { color:#C0392B }
+.tajweed-active .shaddah    { color:#27AE60 }
+.tajweed-active .sukoon     { color:#2C3E50 }
 
 /* Layout selector */
 .layout-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -332,7 +347,7 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
 .featured-card::after{content:'';position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,var(--accent-dim) 0%,transparent 70%)}
 .featured-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
 .featured-num{font-family:var(--ui-font);font-size:.68rem;color:var(--accent);letter-spacing:.15em;margin-bottom:8px;opacity:.8}
-.featured-arabic{font-family:var(--surah-name-font);font-size:2.1rem;color:var(--accent-light);direction:rtl;text-align:right;margin-bottom:10px}
+.featured-arabic{font-family:var(--arabic-font);font-size:2.1rem;color:var(--accent-light);direction:rtl;text-align:right;margin-bottom:10px}
 .featured-name{font-family:var(--ui-font);font-size:1.05rem;color:var(--text);margin-bottom:7px}
 .featured-desc{font-size:.86rem;color:var(--text-muted);line-height:1.6;font-style:italic}
 
@@ -359,7 +374,7 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
 .revelation-badge{font-size:.62rem;padding:2px 7px;border-radius:10px;font-family:var(--ui-font);letter-spacing:.05em}
 .revelation-badge.meccan{background:var(--accent-dim);color:var(--accent);border:1px solid var(--border-accent)}
 .revelation-badge.medinan{background:rgba(82,183,136,.1);color:#52B788;border:1px solid rgba(82,183,136,.2)}
-.surah-arabic{font-family:var(--surah-name-font);font-size:1.25rem;color:var(--accent-light);line-height:1}
+.surah-arabic{font-family:var(--arabic-font);font-size:1.25rem;color:var(--accent-light);direction:rtl;line-height:1}
 
 /* ── READING OVERLAY ── */
 #reading-overlay{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;flex-direction:column;transition:background .4s}
@@ -379,9 +394,9 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
 .nav-btn:disabled{opacity:.3;cursor:default}
 
 /* READING CONTENT */
-.reading-content{flex:1;overflow-y:auto;padding:56px 40px;max-width:95%;margin:0 auto;width:100%}
+.reading-content{flex:1;overflow-y:auto;padding:56px 40px;max-width:820px;margin:0 auto;width:100%}
 .surah-heading{text-align:center;margin-bottom:46px;padding-bottom:36px;border-bottom:1px solid var(--border-accent)}
-.surah-heading-arabic{font-family:var(--surah-name-font);font-size:2.8rem;color:var(--accent-light);margin-bottom:10px;text-shadow:0 0 40px var(--accent-dim)}
+.surah-heading-arabic{font-family:var(--arabic-font);font-size:2.8rem;color:var(--accent-light);direction:rtl;margin-bottom:10px;text-shadow:0 0 40px var(--accent-dim)}
 .surah-heading-en{font-family:var(--ui-font);font-size:1.5rem;color:var(--text);letter-spacing:.1em;margin-bottom:6px}
 .surah-heading-meaning{font-size:1.1rem;color:var(--text-muted);margin-bottom:5px;font-weight:300;font-style:italic}
 .surah-heading-meta{color:var(--text-muted);font-size:.85rem;font-family:var(--ui-font);letter-spacing:.08em}
@@ -399,6 +414,16 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
 .ayah-num-circle{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border:1px solid var(--border-accent);border-radius:50%;font-family:var(--ui-font);font-size:.64rem;color:var(--accent);margin-left:8px;vertical-align:middle;flex-shrink:0}
 .ayah-translation{font-size:1.02rem;color:var(--text-muted);line-height:1.85;padding-left:14px;border-left:2px solid var(--border-accent);font-style:italic;font-weight:300;transition:display .3s}
 .ayah-translation.hide-tr{display:none}
+
+/* ── WORD AUDIO ── */
+.word{display:inline;cursor:pointer;border-radius:4px;padding:2px 1px;transition:background .15s,color .15s;position:relative}
+.word:hover{background:var(--accent-dim);color:var(--accent-light)}
+.word.playing{background:var(--accent);color:var(--bg);border-radius:4px;box-shadow:0 0 12px var(--accent-dim);animation:wordPulse .6s ease infinite alternate}
+@keyframes wordPulse{from{box-shadow:0 0 6px var(--accent-dim)}to{box-shadow:0 0 18px var(--accent)}}
+.word::after{content:'🔊';position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:.65rem;background:var(--bg4);border:1px solid var(--border-accent);border-radius:4px;padding:2px 5px;opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap;z-index:10}
+.word:hover::after{opacity:1}
+.audio-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border-accent);color:var(--accent-light);font-family:var(--ui-font);font-size:.72rem;letter-spacing:.1em;padding:8px 20px;border-radius:20px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
+.audio-toast.show{opacity:1}
 
 /* LOADING / ERROR */
 .loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 20px;gap:20px}
@@ -465,6 +490,10 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
 
         <!-- BLUES -->
         <div class="theme-group-label">Blues</div>
+        <div class="theme-swatch" data-theme="navy" onclick="setTheme('navy',this)">
+          <div class="swatch-dot" style="background:linear-gradient(135deg,#0C1A3A,#1A3060)"></div>
+          <div class="swatch-name">Navy</div>
+        </div>
         <div class="theme-swatch" data-theme="sapphire" onclick="setTheme('sapphire',this)">
           <div class="swatch-dot" style="background:linear-gradient(135deg,#3D6A9C,#7BA7D4)"></div>
           <div class="swatch-name">Sapphire</div>
@@ -489,7 +518,7 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
           <div class="swatch-name">Pistachio</div>
         </div>
 
-        <!-- YELLOWS / GOLDS -->
+        <!-- GOLDS -->
         <div class="theme-group-label">Golds</div>
         <div class="theme-swatch active" data-theme="gold" onclick="setTheme('gold',this)">
           <div class="swatch-dot" style="background:linear-gradient(135deg,#C9A84C,#E8C97A)"></div>
@@ -498,13 +527,6 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
         <div class="theme-swatch" data-theme="cream" onclick="setTheme('cream',this)">
           <div class="swatch-dot" style="background:linear-gradient(135deg,#C49A2A,#FDFAF0)"></div>
           <div class="swatch-name">Cream</div>
-        </div>
-
-        <!-- NEUTRALS -->
-        <div class="theme-group-label">Neutrals</div>
-        <div class="theme-swatch" data-theme="navy" onclick="setTheme('navy',this)">
-          <div class="swatch-dot" style="background:linear-gradient(135deg,#0C1A3A,#1A3060)"></div>
-          <div class="swatch-name">Navy</div>
         </div>
         <div class="theme-swatch" data-theme="parchment" onclick="setTheme('parchment',this)">
           <div class="swatch-dot" style="background:linear-gradient(135deg,#C4A35A,#F5EDD8)"></div>
@@ -545,14 +567,27 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
     <div class="s-section">
       <div class="s-label">Arabic Font Style</div>
       <div class="font-grid">
-        <div class="font-opt active" data-font="IndoPak" onclick="setArabicFont('IndoPak',this)">
-          <div class="font-arabic" style="font-family:'IndoPak',serif">بسم الله</div>
+        <div class="font-opt active" data-font="Amiri" onclick="setArabicFont('Amiri',this)">
+          <div class="font-arabic" style="font-family:'Amiri',serif">بِسْمِ اللَّه</div>
+          <div class="font-name">Amiri</div>
+        </div>
+        <div class="font-opt" data-font="IndoPak" onclick="setArabicFont('IndoPak',this)">
+          <div class="font-arabic" style="font-family:'IndoPak','Amiri',serif">بِسْمِ اللَّه</div>
           <div class="font-name">IndoPak</div>
         </div>
-        <div class="font-opt" data-font="Scheherazade New" onclick="setArabicFont('Scheherazade New',this)">
-          <div class="font-arabic" style="font-family:'Scheherazade New',serif">بسم الله</div>
-          <div class="font-name">Scheherazade</div>
+        <div class="font-opt" data-font="Tajweed" onclick="setArabicFont('Tajweed',this)">
+          <div class="font-arabic" style="font-family:'Tajweed','Amiri',serif;color:var(--accent-light)">بِسْمِ اللَّه</div>
+          <div class="font-name">Tajweed ✦</div>
         </div>
+      </div>
+      <div id="tajweed-legend" style="display:none;margin-top:10px;background:var(--bg3);border:1px solid var(--border-accent);border-radius:4px;padding:10px 12px;font-size:.72rem;line-height:1.9">
+        <div style="font-family:var(--ui-font);font-size:.6rem;letter-spacing:.1em;color:var(--accent);margin-bottom:6px">TAJWEED COLOUR GUIDE</div>
+        <span style="color:#00A550">■</span> Ghunnah &nbsp;
+        <span style="color:#4B9CD3">■</span> Ikhfa &nbsp;
+        <span style="color:#FF6B35">■</span> Idgham<br>
+        <span style="color:#8E44AD">■</span> Qalqalah &nbsp;
+        <span style="color:#C0392B">■</span> Madd &nbsp;
+        <span style="color:#27AE60">■</span> Shaddah
       </div>
     </div>
 
@@ -674,19 +709,19 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
   <div class="featured-row">
     <div class="featured-card" onclick="openSurah(1)">
       <div class="featured-num">SURAH 1</div>
-      <div class="featured-arabic">001</div>
+      <div class="featured-arabic">الْفَاتِحَة</div>
       <div class="featured-name">Al-Fatiha — The Opening</div>
       <div class="featured-desc">The heart of the Quran, recited in every unit of prayer. Seven verses of devotion and guidance.</div>
     </div>
     <div class="featured-card" onclick="openSurah(36)">
       <div class="featured-num">SURAH 36</div>
-      <div class="featured-arabic">036</div>
+      <div class="featured-arabic">يس</div>
       <div class="featured-name">Ya-Sin — The Heart</div>
       <div class="featured-desc">Called the heart of the Quran by the Prophet ﷺ. A profound meditation on resurrection.</div>
     </div>
     <div class="featured-card" onclick="openSurah(55)">
       <div class="featured-num">SURAH 55</div>
-      <div class="featured-arabic">055</div>
+      <div class="featured-arabic">الرَّحْمَٰن</div>
       <div class="featured-name">Ar-Rahman — The Merciful</div>
       <div class="featured-desc">A lyrical celebration of Allah's blessings — "Which of your Lord's favours will you deny?"</div>
     </div>
@@ -723,6 +758,10 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
   </div>
   <div class="reading-content" id="reading-content" onscroll="updateProgress()"></div>
 </div>
+
+<!-- AUDIO TOAST -->
+<div class="audio-toast" id="audio-toast">Loading audio…</div>
+<audio id="word-audio" preload="none"></audio>
 
 <!-- JUZ MODAL -->
 <div id="juz-panel">
@@ -863,8 +902,9 @@ const juzData=[
 /* ── STATE ── */
 let currentFilter='all', arabicFontSize=1.65, transFontSize=1.02;
 let currentSurahNum=null, showTranslation=true, showVerseNums=true;
-let currentLayout='stacked', currentArabicFont='IndoPak';
+let currentLayout='stacked', currentArabicFont='Amiri';
 const cache={};
+const wordCache={};
 
 /* ── SIDEBAR ── */
 function openSidebar(){
@@ -906,8 +946,11 @@ function setArabicFont(font,el){
   currentArabicFont=font;
   document.querySelectorAll('.font-opt').forEach(e=>e.classList.remove('active'));
   if(el) el.classList.add('active');
-  // Apply CSS variable
-  document.documentElement.style.setProperty('--arabic-font',`'${font}', serif`);
+  document.documentElement.style.setProperty('--arabic-font',`'${font}', 'Amiri', serif`);
+  // Tajweed mode — show legend, add class for colour rules
+  const isTajweed = font === 'Tajweed';
+  document.getElementById('tajweed-legend').style.display = isTajweed ? 'block' : 'none';
+  document.getElementById('reading-content').classList.toggle('tajweed-active', isTajweed);
 }
 
 /* ── LAYOUT ── */
@@ -942,9 +985,6 @@ function changeFont(d){
 }
 
 /* ── SURAH LIST ── */
-function formatSurahCode(n){
-  return String(n).padStart(3,'0');
-}
 function renderSurahs(list){
   document.getElementById('surah-grid').innerHTML=list.map(s=>`
     <div class="surah-card" onclick="openSurah(${s.n})">
@@ -953,7 +993,7 @@ function renderSurahs(list){
         <div class="surah-name-en">${s.en}</div>
         <div class="surah-meta"><span>${s.v} verses</span><span class="revelation-badge ${s.type}">${s.type[0].toUpperCase()+s.type.slice(1)}</span></div>
       </div>
-      <div class="surah-arabic">${formatSurahCode(s.n)}</div>
+      <div class="surah-arabic">${s.ar}</div>
     </div>`).join('');
 }
 function filterSurahs(type,btn){
@@ -994,47 +1034,103 @@ async function openSurah(n){
 
 async function fetchSurah(n){
   if(cache[n]) return cache[n];
-  let page=1;
-  let totalPages=1;
-  const allAyahs=[];
-  do{
-    const r=await fetch(`https://api.quran.com/api/v4/verses/by_chapter/${n}?per_page=50&page=${page}&fields=text_indopak_nastaleeq&translations=20`);
-    if(!r.ok) throw new Error();
-    const j=await r.json();
-    const verses=Array.isArray(j.verses)?j.verses:[];
-    totalPages=j.pagination&&j.pagination.total_pages?j.pagination.total_pages:1;
-    verses.forEach(v=>{
-      const tr=Array.isArray(v.translations)&&v.translations[0]?v.translations[0].text:'';
-      allAyahs.push({
-        num:v.verse_number,
-        ar:v.text_indopak_nastaleeq||'',
-        en:tr
+  // Fetch Arabic + English translation in parallel with word-by-word data
+  const [textRes, wordsRes] = await Promise.all([
+    fetch(`https://api.alquran.cloud/v1/surah/${n}/editions/quran-uthmani,en.sahih`),
+    fetch(`https://api.quran.com/api/v4/verses/by_chapter/${n}?language=en&words=true&word_fields=text_uthmani,audio_url&per_page=300&page=1`)
+  ]);
+  if(!textRes.ok) throw new Error();
+  const j=await textRes.json(); if(j.code!==200) throw new Error();
+  const ar=j.data[0].ayahs, en=j.data[1].ayahs;
+
+  // Build word audio map: key = "surah:ayah:wordPos" => audio_url
+  const wordMap={};
+  if(wordsRes.ok){
+    const wj=await wordsRes.json();
+    if(wj.verses){
+      wj.verses.forEach(v=>{
+        if(v.words) v.words.forEach(w=>{
+          if(w.char_type_name!=='end'&&w.audio_url){
+            wordMap[`${n}:${v.verse_number}:${w.position}`]=w.audio_url;
+          }
+        });
       });
-    });
-    page+=1;
-  }while(page<=totalPages);
-  cache[n]=allAyahs;
+    }
+  }
+
+  cache[n]=ar.map((a,i)=>({num:a.numberInSurah,ar:a.text,en:en[i].text}));
+  wordCache[n]=wordMap;
   return cache[n];
 }
 
 function renderSurah(s,ayahs){
+  const wmap = wordCache[s.n] || {};
   let html=`<div class="surah-heading">
-    <div class="surah-heading-arabic">${formatSurahCode(s.n)}</div>
+    <div class="surah-heading-arabic">${s.ar}</div>
     <div class="surah-heading-en">${s.en}</div>
     <div class="surah-heading-meaning">${s.meaning}</div>
     <div class="surah-heading-meta">${s.v} Verses · ${s.type[0].toUpperCase()+s.type.slice(1)}</div>
   </div>`;
-
+  if(s.n!==9&&s.n!==1) html+=`<div class="basmala">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`;
   ayahs.forEach(a=>{
     const numDisp=showVerseNums?'':'display:none';
     const trHide=showTranslation?'':'hide-tr';
+    // Wrap each word in a clickable span
+    const words = a.ar.split(/\s+/);
+    const wrappedAr = words.map((w,wi)=>{
+      const key=`${s.n}:${a.num}:${wi+1}`;
+      const audioUrl=wmap[key]||'';
+      const audioAttr=audioUrl?`data-audio="${audioUrl}"`:'';
+      const cls=audioUrl?'word':'word no-audio';
+      return `<span class="${cls}" ${audioAttr} onclick="playWord(this)">${w}</span>`;
+    }).join(' ');
     html+=`<div class="ayah-block">
       <div class="ayah-num-label" style="${numDisp}">Verse ${a.num}</div>
-      <div class="ayah-arabic" style="font-size:${arabicFontSize}rem">${a.ar}</div>
+      <div class="ayah-arabic" style="font-size:${arabicFontSize}rem">${wrappedAr} <span class="ayah-num-circle" style="${numDisp}">${a.num}</span></div>
       <div class="ayah-translation ${trHide}" style="font-size:${transFontSize}rem">${a.en}</div>
     </div>`;
   });
   document.getElementById('reading-content').innerHTML=html;
+  if(document.getElementById('reading-content').classList.contains('tajweed-active')){
+    document.getElementById('reading-content').classList.add('tajweed-active');
+  }
+}
+
+/* ── WORD AUDIO ── */
+let currentPlayingWord=null;
+function playWord(el){
+  const url=el.dataset.audio;
+  if(!url) return;
+  const audio=document.getElementById('word-audio');
+  // Stop & unhighlight previous
+  if(currentPlayingWord&&currentPlayingWord!==el){
+    currentPlayingWord.classList.remove('playing');
+  }
+  // If same word clicked again — toggle off
+  if(currentPlayingWord===el&&!audio.paused){
+    audio.pause(); audio.currentTime=0;
+    el.classList.remove('playing');
+    currentPlayingWord=null;
+    return;
+  }
+  currentPlayingWord=el;
+  el.classList.add('playing');
+  // Build full URL if relative
+  const fullUrl = url.startsWith('http') ? url : 'https://audio.qurancdn.com/'+url;
+  audio.src=fullUrl;
+  audio.play().catch(()=>{
+    showToast('Audio unavailable');
+    el.classList.remove('playing');
+    currentPlayingWord=null;
+  });
+  audio.onended=()=>{ el.classList.remove('playing'); currentPlayingWord=null; };
+}
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('audio-toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2000);
 }
 
 /* ── READING CONTROLS ── */
