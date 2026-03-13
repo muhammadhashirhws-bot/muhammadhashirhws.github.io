@@ -420,8 +420,8 @@ main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 1
 .word:hover{background:var(--accent-dim);color:var(--accent-light)}
 .word.playing{background:var(--accent);color:var(--bg);border-radius:4px;box-shadow:0 0 12px var(--accent-dim);animation:wordPulse .6s ease infinite alternate}
 @keyframes wordPulse{from{box-shadow:0 0 6px var(--accent-dim)}to{box-shadow:0 0 18px var(--accent)}}
-.word::after{content:'🔊';position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:.65rem;background:var(--bg4);border:1px solid var(--border-accent);border-radius:4px;padding:2px 5px;opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap;z-index:10}
-.word:hover::after{opacity:1}
+.word[data-meaning]::after{content:attr(data-meaning);position:absolute;top:-32px;left:50%;transform:translateX(-50%);font-size:.68rem;font-family:'Cormorant Garamond',serif;font-style:italic;background:var(--bg4);border:1px solid var(--border-accent);color:var(--accent-light);border-radius:4px;padding:3px 8px;opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap;z-index:10;max-width:160px;overflow:hidden;text-overflow:ellipsis}
+.word[data-meaning]:hover::after{opacity:1}
 .audio-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border-accent);color:var(--accent-light);font-family:var(--ui-font);font-size:.72rem;letter-spacing:.1em;padding:8px 20px;border-radius:20px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
 .audio-toast.show{opacity:1}
 
@@ -1034,24 +1034,27 @@ async function openSurah(n){
 
 async function fetchSurah(n){
   if(cache[n]) return cache[n];
-  // Fetch Arabic + English translation in parallel with word-by-word data
   const [textRes, wordsRes] = await Promise.all([
     fetch(`https://api.alquran.cloud/v1/surah/${n}/editions/quran-uthmani,en.sahih`),
-    fetch(`https://api.quran.com/api/v4/verses/by_chapter/${n}?language=en&words=true&word_fields=text_uthmani,audio_url&per_page=300&page=1`)
+    fetch(`https://api.quran.com/api/v4/verses/by_chapter/${n}?language=en&words=true&word_fields=text_uthmani,audio_url,translation&per_page=300&page=1`)
   ]);
   if(!textRes.ok) throw new Error();
   const j=await textRes.json(); if(j.code!==200) throw new Error();
   const ar=j.data[0].ayahs, en=j.data[1].ayahs;
 
-  // Build word audio map: key = "surah:ayah:wordPos" => audio_url
+  // Build word map: key = "surah:ayah:wordPos" => {audio, meaning}
   const wordMap={};
   if(wordsRes.ok){
     const wj=await wordsRes.json();
     if(wj.verses){
       wj.verses.forEach(v=>{
         if(v.words) v.words.forEach(w=>{
-          if(w.char_type_name!=='end'&&w.audio_url){
-            wordMap[`${n}:${v.verse_number}:${w.position}`]=w.audio_url;
+          if(w.char_type_name!=='end'){
+            const meaning = w.translation?.text || '';
+            const audio   = w.audio_url || '';
+            if(audio || meaning){
+              wordMap[`${n}:${v.verse_number}:${w.position}`]={audio, meaning};
+            }
           }
         });
       });
@@ -1071,18 +1074,34 @@ function renderSurah(s,ayahs){
     <div class="surah-heading-meaning">${s.meaning}</div>
     <div class="surah-heading-meta">${s.v} Verses · ${s.type[0].toUpperCase()+s.type.slice(1)}</div>
   </div>`;
-  if(s.n!==9&&s.n!==1) html+=`<div class="basmala">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`;
+  const BASMALA_AR = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
+  const showSeparateBasmala = s.n !== 9 && s.n !== 1;
+  if(showSeparateBasmala) html+=`<div class="basmala" title="Click to hear Basmala" onclick="playBasmala()" style="cursor:pointer">${BASMALA_AR}</div>`;
   ayahs.forEach(a=>{
     const numDisp=showVerseNums?'':'display:none';
     const trHide=showTranslation?'':'hide-tr';
+    // Strip leading Basmala from ayah text when it's shown separately above
+    // (API includes Basmala as part of verse 1 text for most surahs)
+    let ayahText = a.ar;
+    if(showSeparateBasmala && a.num===1 && ayahText.startsWith(BASMALA_AR)){
+      ayahText = ayahText.slice(BASMALA_AR.length).trimStart();
+    }
+    // Also handle unicode-normalised variations — strip any leading basmala pattern
+    if(showSeparateBasmala && a.num===1){
+      ayahText = ayahText.replace(/^بِسْمِ\s+اللَّهِ\s+الرَّحْمَٰنِ\s+الرَّحِيمِ\s*/,'');
+      ayahText = ayahText.replace(/^بسم\s+الله\s+الرحمن\s+الرحيم\s*/,'');
+    }
+    if(!ayahText.trim()) return; // skip if nothing left after stripping
     // Wrap each word in a clickable span
-    const words = a.ar.split(/\s+/);
+    const words = ayahText.split(/\s+/);
     const wrappedAr = words.map((w,wi)=>{
       const key=`${s.n}:${a.num}:${wi+1}`;
-      const audioUrl=wmap[key]||'';
+      const entry=wmap[key]||{};
+      const audioUrl=entry.audio||'';
+      const meaning=entry.meaning||'';
       const audioAttr=audioUrl?`data-audio="${audioUrl}"`:'';
-      const cls=audioUrl?'word':'word no-audio';
-      return `<span class="${cls}" ${audioAttr} onclick="playWord(this)">${w}</span>`;
+      const meaningAttr=meaning?`data-meaning="${meaning.replace(/"/g,'&quot;')}"`:'';
+      return `<span class="word" ${audioAttr} ${meaningAttr} onclick="playWord(this)">${w}</span>`;
     }).join(' ');
     html+=`<div class="ayah-block">
       <div class="ayah-num-label" style="${numDisp}">Verse ${a.num}</div>
@@ -1098,15 +1117,19 @@ function renderSurah(s,ayahs){
 
 /* ── WORD AUDIO ── */
 let currentPlayingWord=null;
+// Basmala audio — Mishary Alafasy recitation of Basmala
+function playBasmala(){
+  const audio=document.getElementById('word-audio');
+  audio.src='https://audio.qurancdn.com/wbw/001_001_001.mp3';
+  audio.play().catch(()=>showToast('Audio unavailable'));
+}
 function playWord(el){
   const url=el.dataset.audio;
   if(!url) return;
   const audio=document.getElementById('word-audio');
-  // Stop & unhighlight previous
   if(currentPlayingWord&&currentPlayingWord!==el){
     currentPlayingWord.classList.remove('playing');
   }
-  // If same word clicked again — toggle off
   if(currentPlayingWord===el&&!audio.paused){
     audio.pause(); audio.currentTime=0;
     el.classList.remove('playing');
@@ -1115,7 +1138,6 @@ function playWord(el){
   }
   currentPlayingWord=el;
   el.classList.add('playing');
-  // Build full URL if relative
   const fullUrl = url.startsWith('http') ? url : 'https://audio.qurancdn.com/'+url;
   audio.src=fullUrl;
   audio.play().catch(()=>{
