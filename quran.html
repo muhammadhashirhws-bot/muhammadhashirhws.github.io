@@ -1074,43 +1074,45 @@ function renderSurah(s,ayahs){
     <div class="surah-heading-meaning">${s.meaning}</div>
     <div class="surah-heading-meta">${s.v} Verses · ${s.type[0].toUpperCase()+s.type.slice(1)}</div>
   </div>`;
-  const BASMALA_AR = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
+  // Surah 1: Basmala IS verse 1, show normally. Surah 9: no Basmala. Others: show Basmala header and skip those words from verse 1.
   const showSeparateBasmala = s.n !== 9 && s.n !== 1;
-  if(showSeparateBasmala) html+=`<div class="basmala" title="Click to hear Basmala" onclick="playBasmala()" style="cursor:pointer">${BASMALA_AR}</div>`;
+  if(showSeparateBasmala) html+=`<div class="basmala" onclick="playBasmala()" style="cursor:pointer">${'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ'}</div>`;
+
   ayahs.forEach(a=>{
-    const numDisp=showVerseNums?'':'display:none';
-    const trHide=showTranslation?'':'hide-tr';
-    // Strip leading Basmala from ayah text when it's shown separately above
-    // (API includes Basmala as part of verse 1 text for most surahs)
-    let ayahText = a.ar;
-    if(showSeparateBasmala && a.num===1 && ayahText.startsWith(BASMALA_AR)){
-      ayahText = ayahText.slice(BASMALA_AR.length).trimStart();
+    const numDisp = showVerseNums ? '' : 'display:none';
+    const trHide  = showTranslation ? '' : 'hide-tr';
+
+    // Split the raw Arabic text into words
+    let allWords = a.ar.trim().split(/\s+/);
+
+    // For verse 1 of surahs that have a separate Basmala header:
+    // The API includes Basmala as the first 4 words of verse 1 — skip them
+    let wordOffset = 0;
+    if(showSeparateBasmala && a.num === 1){
+      // Basmala is always exactly 4 words: بِسْمِ / اللَّهِ / الرَّحْمَٰنِ / الرَّحِيمِ
+      allWords = allWords.slice(4);
+      wordOffset = 4; // audio positions in API are 1-based so offset by 4
     }
-    // Also handle unicode-normalised variations — strip any leading basmala pattern
-    if(showSeparateBasmala && a.num===1){
-      ayahText = ayahText.replace(/^بِسْمِ\s+اللَّهِ\s+الرَّحْمَٰنِ\s+الرَّحِيمِ\s*/,'');
-      ayahText = ayahText.replace(/^بسم\s+الله\s+الرحمن\s+الرحيم\s*/,'');
-    }
-    if(!ayahText.trim()) return; // skip if nothing left after stripping
-    // Wrap each word in a clickable span
-    const words = ayahText.split(/\s+/);
-    const wrappedAr = words.map((w,wi)=>{
-      const key=`${s.n}:${a.num}:${wi+1}`;
-      const entry=wmap[key]||{};
-      const audioUrl=entry.audio||'';
-      const meaning=entry.meaning||'';
-      const audioAttr=audioUrl?`data-audio="${audioUrl}"`:'';
-      const meaningAttr=meaning?`data-meaning="${meaning.replace(/"/g,'&quot;')}"`:'';
+
+    if(!allWords.length) return; // nothing left — skip
+
+    const wrappedAr = allWords.map((w, wi)=>{
+      const pos = wi + 1 + wordOffset; // 1-based position matching API
+      const key = `${s.n}:${a.num}:${pos}`;
+      const entry = wmap[key] || {};
+      const audioAttr   = entry.audio   ? `data-audio="${entry.audio}"` : '';
+      const meaningAttr = entry.meaning ? `data-meaning="${entry.meaning.replace(/"/g,'&quot;')}"` : '';
       return `<span class="word" ${audioAttr} ${meaningAttr} onclick="playWord(this)">${w}</span>`;
     }).join(' ');
+
     html+=`<div class="ayah-block">
       <div class="ayah-num-label" style="${numDisp}">Verse ${a.num}</div>
       <div class="ayah-arabic" style="font-size:${arabicFontSize}rem">${wrappedAr} <span class="ayah-num-circle" style="${numDisp}">${a.num}</span></div>
       <div class="ayah-translation ${trHide}" style="font-size:${transFontSize}rem">${a.en}</div>
     </div>`;
   });
-  document.getElementById('reading-content').innerHTML=html;
-  if(document.getElementById('reading-content').classList.contains('tajweed-active')){
+  document.getElementById('reading-content').innerHTML = html;
+  if(currentArabicFont==='Tajweed'){
     document.getElementById('reading-content').classList.add('tajweed-active');
   }
 }
